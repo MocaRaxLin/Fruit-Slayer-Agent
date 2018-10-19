@@ -8,7 +8,7 @@ print("---- load_data test ------")
 agent.print_info()
 
 print("---- move test ------")
-points = agent.move(4, 7)
+points = agent.move(agent.grid, 4, 7)
 print("points = " + str(points)) # 14*14 = 196
 agent.print_info()
 

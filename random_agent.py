@@ -2,9 +2,9 @@ import random
 
 from agent import Agent
 from typing import List
-
+		
 class RandomAgent(Agent):
-	def __init__(self, fileName):
+	def __init__(self, fileName:str):
 		super(RandomAgent, self).__init__(fileName)
 	
 	def predict_best_move(self) -> List[int]:

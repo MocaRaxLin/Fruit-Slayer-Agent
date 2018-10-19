@@ -1,5 +1,5 @@
 from typing import List
-
+		
 class Agent:
 	def __init__(self, file_name:str):
 		self.grid = []
@@ -8,7 +8,7 @@ class Agent:
 		self.time = -1
 		self.load_data(file_name)
 
-	def load_data(self, file_name):
+	def load_data(self, file_name:str):
 		file = open(file_name, mode='r')
 		self.N = int(file.readline())
 		self.type = int(file.readline())
@@ -31,8 +31,9 @@ class Agent:
 	def predict_best_move(self) -> str:
 		pass
 
-	def move(self, row:int, col:int) -> int:
-		def dfs(grid, r, c, N, p, seen) -> int:
+	def move(self, grid:List[List[chr]], row:int, col:int) -> int:
+		# rerurn the points we get
+		def dfs(grid:List[List[chr]], r:int, c:int, N:int, p:int, seen:List[List[bool]]) -> int:
 			if r == -1 or c == -1 or r == N or c == N:
 				return 0
 			if seen[r][c] or grid[r][c] == '*' or grid[r][c] != p:
@@ -46,7 +47,7 @@ class Agent:
 			point += dfs(grid, r, c+1, N, p, seen)
 			return point + 1
 
-		def drop(grid, c, N):
+		def drop(grid:List[List[chr]], c:int, N:int):
 			bot = N - 1
 			for r in reversed(range(N)):
 				if grid[r][c] != '*':
@@ -57,18 +58,19 @@ class Agent:
 				bot -= 1
 
 		# take
-		p = self.grid[row][col]
-		seen = [[False for i in range(self.N)] for j in range(self.N)]
+		p = grid[row][col]
+		N = len(grid)
+		seen = [[False for i in range(N)] for j in range(N)]
 		ret = 0
-		ret = dfs(self.grid, row, col, self.N, p, seen)
+		ret = dfs(grid, row, col, N, p, seen)
 
 		# drop
-		for c in range(self.N):
-			drop(self.grid, c, self.N)
+		for c in range(N):
+			drop(grid, c, N)
 
 		return ret*ret
 
-	def write_grid(self, file_name, r, c):
+	def write_grid(self, file_name:str, r:int, c:int):
 		file = open(file_name, 'w')
 		take = chr(ord('A')+c+1) + str(r+1) + '\n'
 		file.write(take)
