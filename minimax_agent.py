@@ -16,13 +16,13 @@ class State(object):
 		self.next_move = [-1,-1] # leaf[-1,-1]
 		self.next_state = None
 		if self.find_max:
-			self.minimax_value = -float('inf')
+			self.best = -float('inf')
 		else:
-			self.minimax_value = float('inf')
+			self.best = float('inf')
 
 class MinimaxAgent(Agent):
-	def __init__(self, fileName):
-		super(MinimaxAgent, self).__init__(fileName)
+	def __init__(self, file_name):
+		super(MinimaxAgent, self).__init__(file_name)
 		self.minimax_root = None
 	
 	def print_minimax(self):
@@ -64,7 +64,7 @@ class MinimaxAgent(Agent):
 
 	def build_minimax(self, root:State):
 		if root.depth == 0:
-			root.minimax_value = root.points
+			root.best = root.points
 			return
 		branches = self.get_branches_rc(root.grid)
 
@@ -80,15 +80,15 @@ class MinimaxAgent(Agent):
 
 
 			if root.find_max:
-				if root.minimax_value < child.minimax_value:
+				if root.best < child.best:
 					root.next_move = rc
 					root.next_state = child
-					root.minimax_value = child.minimax_value
+					root.best = child.best
 			else:
-				if root.minimax_value > child.minimax_value:
+				if root.best > child.best:
 					root.next_move = rc
 					root.next_state = child
-					root.minimax_value = child.minimax_value
+					root.best = child.best
 
 			root.children.append(child)
 
