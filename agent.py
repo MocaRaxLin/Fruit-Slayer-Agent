@@ -28,6 +28,11 @@ class Agent:
 			print(line)
 		print()
 
+	def print_grid(self, grid:List[List[chr]]):
+		for line in grid:
+			print(line)
+		print()
+
 	def predict_best_move(self) -> str:
 		pass
 

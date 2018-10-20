@@ -15,8 +15,14 @@ print("see test_output.txt in folder!") #I5
 print()
 
 print("----- predict_best_move of minimax agent with 2 depth test -----")
-move = agent.predict_best_move(2) # test on depth = 2
+move = agent.predict_best_move(2) # test on depth = 3, about 25 secs
 print("best move = " + str(move))
-agent.print_minimax()
+print("minimax points to expect to get = " + str(agent.minimax_root.minimax_value))
+print("next grid = ")
+agent.print_grid(agent.minimax_root.next_state.grid)
 
+print("----- write_grid test ------")
+agent.write_next_grid("test_output_minimax.txt")
+print("see test_output.txt in folder!") #E4
+print("It should be the same as next gird")
 print()
