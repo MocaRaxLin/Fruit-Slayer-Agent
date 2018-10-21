@@ -12,6 +12,30 @@ class MinimaxAgentPruning(MinimaxAgent):
 	def __init__(self, file_name):
 		super(MinimaxAgentPruning, self).__init__(file_name)
 
+	def dfs_check(self, grid:List[List[chr]], r:int, c:int, N:int, p:int, seen:List[List[chr]]) -> int:
+		if r == -1 or c == -1 or r == N or c == N or seen[r][c] or grid[r][c] != p:
+			return 0
+		seen[r][c] = True
+		ret = 1
+		ret += self.dfs_check(grid, r-1, c, N, p, seen)
+		ret += self.dfs_check(grid, r+1, c, N, p, seen)
+		ret += self.dfs_check(grid, r, c-1, N, p, seen)
+		ret += self.dfs_check(grid, r, c+1, N, p, seen)
+		return ret
+
+	def get_branches(self, grid:List[List[chr]], find_max:bool) -> List[List[int]]:
+		n = len(grid)
+		seen = [[False for i in range(n)] for j in range(n)]
+		pool_ret = []
+		for r in range(n):
+			for c in range(n):
+				if not seen[r][c] and grid[r][c] != '*':
+					blocks = self.dfs_check(grid, r, c, n, grid[r][c], seen)
+					pool_ret.append([r, c, blocks])
+		# huristic improvement, try to get best move in early pruning
+		pool_ret.sort(key=lambda x: x[2], reverse=find_max)
+		return pool_ret
+
 	def build_minimax_alpha_beta_pruning(self, root:AlphaBetaState):
 		'''
 		Pseudocode in general:
@@ -43,16 +67,22 @@ class MinimaxAgentPruning(MinimaxAgent):
 			root.best = root.points
 			return
 
-		branches = self.get_branches_rc(root.grid)
+		branches = self.get_branches(root.grid, root.find_max)
+		b_size = len(branches)
+		self.searched_node += b_size
+		if b_size == 0:
+			root.best = root.points
+			return
 
-		for rc in branches:
+		for data in branches:
 			child_grid = [x[:] for x in root.grid] # child_grid = deepcopy(root.grid)
+			rc = data[0:2]
 			points = self.move(child_grid, rc[0], rc[1])
 			child = None
 			if root.find_max:
-				child = AlphaBetaState(child_grid, rc, root.points + points, False, root.depth-1, root.alpha, root.beta)
+				child = AlphaBetaState(child_grid, rc, root.points + points, False, root.depth - 1, root.alpha, root.beta)
 			else:
-				child = AlphaBetaState(child_grid, rc, root.points - points, True, root.depth-1, root.alpha, root.beta)
+				child = AlphaBetaState(child_grid, rc, root.points - points, True, root.depth - 1, root.alpha, root.beta)
 			self.build_minimax_alpha_beta_pruning(child)
 
 

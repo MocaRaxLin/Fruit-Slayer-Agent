@@ -13,7 +13,7 @@ class State(object):
 
 		self.children = []
 
-		self.next_move = [-1,-1] # leaf[-1,-1]
+		self.next_move = [-1,-1] # leaf[-1,-1], in alpha-beta[r, c, block]
 		self.next_state = None
 		if self.find_max:
 			self.best = -float('inf')
@@ -24,6 +24,7 @@ class MinimaxAgent(Agent):
 	def __init__(self, file_name):
 		super(MinimaxAgent, self).__init__(file_name)
 		self.minimax_root = None
+		self.searched_node = 0
 	
 	def print_minimax(self):
 		def dfs_print_leaves(root:State) -> str:
@@ -42,42 +43,39 @@ class MinimaxAgent(Agent):
 		leaves_info = dfs_print_leaves(self.minimax_root)
 		print(leaves_info)
 
-	def dfs_check(self, grid:List[List[chr]], r:int, c:int, n:int, p:int, seen:List[List[bool]]):
-		if r == -1 or c == -1 or r == n or c == n or seen[r][c] or grid[r][c] != p:
-			return
-		seen[r][c] = True
-		self.dfs_check(grid, r-1, c, n, p, seen)
-		self.dfs_check(grid, r+1, c, n, p, seen)
-		self.dfs_check(grid, r, c-1, n, p, seen)
-		self.dfs_check(grid, r, c+1, n, p, seen)
-
-	def get_branches_rc(self, grid:List[List[chr]]) -> List[List[int]]:
+	def get_branches(self, grid:List[List[chr]]) -> List[List[int]]:
 		n = len(grid)
 		seen = [[False for i in range(n)] for j in range(n)]
 		pool_ret = []
 		for r in range(n):
 			for c in range(n):
 				if not seen[r][c] and grid[r][c] != '*':
-					pool_ret.append([r,c])
-					self.dfs_check(grid, r, c, n, grid[r][c], seen)
+					child_grid = [x[:] for x in grid] # child_grid = deepcopy(grid)
+					points = self.move_seen(child_grid, r, c, seen)
+					pool_ret.append([r, c, points, child_grid])
 		return pool_ret
 
 	def build_minimax(self, root:State):
 		if root.depth == 0:
 			root.best = root.points
 			return
-		branches = self.get_branches_rc(root.grid)
 
-		for rc in branches:
-			child_grid = [x[:] for x in root.grid] # child_grid = deepcopy(root.grid)
-			points = self.move(child_grid, rc[0], rc[1])
+		branches = self.get_branches(root.grid)
+		b_size = len(branches)
+		self.searched_node += b_size
+		if b_size == 0:
+			root.best = root.points
+			return
+
+		for data in branches:
 			child = None
+			rc = data[0:2]
 			if root.find_max:
-				child = State(child_grid, rc, root.points + points, False, root.depth-1)
+				# row = data[0], col = data[1], points = data[2], child_grid = data[3]
+				child = State(data[3], rc, root.points + data[2], False, root.depth-1)
 			else:
-				child = State(child_grid, rc, root.points - points, True, root.depth-1)
+				child = State(data[3], rc, root.points - data[2], True, root.depth-1)
 			self.build_minimax(child)
-
 
 			if root.find_max:
 				if root.best < child.best:

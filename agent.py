@@ -37,20 +37,23 @@ class Agent:
 		pass
 
 	def move(self, grid:List[List[chr]], row:int, col:int) -> int:
+		seen = [[False for i in range(len(grid))] for j in range(len(grid))]
+		return self.move_seen(grid, row, col, seen)
+
+	def move_seen(self, grid:List[List[chr]], row:int, col:int, seen:List[List[bool]]) -> int:
 		# rerurn the points we get
 		def dfs(grid:List[List[chr]], r:int, c:int, N:int, p:int, seen:List[List[bool]]) -> int:
-			if r == -1 or c == -1 or r == N or c == N:
+			if r == -1 or c == -1 or r == N or c == N or seen[r][c] or grid[r][c] != p:
 				return 0
-			if seen[r][c] or grid[r][c] == '*' or grid[r][c] != p:
-				return 0
+				
 			seen[r][c] = True
 			grid[r][c] = '*'
-			point = 0
+			point = 1
 			point += dfs(grid, r-1, c, N, p, seen)
 			point += dfs(grid, r+1, c, N, p, seen)
 			point += dfs(grid, r, c-1, N, p, seen)
 			point += dfs(grid, r, c+1, N, p, seen)
-			return point + 1
+			return point
 
 		def drop(grid:List[List[chr]], c:int, N:int):
 			bot = N - 1
@@ -65,9 +68,8 @@ class Agent:
 		# take
 		p = grid[row][col]
 		N = len(grid)
-		seen = [[False for i in range(N)] for j in range(N)]
 		ret = 0
-		ret = dfs(grid, row, col, N, p, seen)
+		ret = dfs(grid, row, col, N, p, seen) # seen from input parameter
 
 		# drop
 		for c in range(N):
@@ -77,11 +79,12 @@ class Agent:
 
 	def write_grid(self, file_name:str, r:int, c:int):
 		file = open(file_name, 'w')
-		take = chr(ord('A')+c+1) + str(r+1) + '\n'
+		take = chr(ord('A')+c) + str(r+1) + '\n'
 		file.write(take)
 		for row in self.grid:
 			line = ''.join(row) + '\n'
 			file.write(line)
+		file.close()
 
 
 
