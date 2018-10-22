@@ -1,7 +1,7 @@
 # Fruit-Slayer-Agents
 
 ## Game Description
-The Fruit Rage is a two player game in which each player tries to maximize his/her share from a batch of fruits randomly placed in a box. The box is divided into cells and each cell is either empty(\*) or filled with one fruit(0-8) of a specific type.
+The Fruit-Slayer-Agents is a two player game in which each player tries to maximize his/her share from a batch of fruits randomly placed in a box. The box is divided into cells and each cell is either empty(\*) or filled with one fruit(0-8) of a specific type.
 
 At the beginning of each game, all cells are filled with fruits. Players play in turn and can pick a cell of the box in their own turn and claim all fruit of the same type, in all cells that are connected to the selected cell through horizontal and vertical paths. For each selection or move the agent is rewarded a numeric value which is the square of the number of fruits claimed in that move. Once an agent picks the fruits from the cells, their empty place will be filled with other fruits on top of them (which fall down due to gravity), if any. In this game, no fruit is added during game play. Hence, players play until all fruits have been claimed.
 
@@ -10,6 +10,8 @@ eliminate x fruit -> get x^2 points.
 In the end, the player with higher score win.
 
 In addition, we give each player 300 seconds for the entire game. The player used up the 300 seconds will lose too.
+
+reference: all gaming setting is credited to usc cs561 17fall hw2
 
 ## Project Agents
 We built 3 agents, they are
