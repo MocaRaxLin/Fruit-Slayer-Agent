@@ -33,7 +33,7 @@ level 2 -> b^b branches,
 level 3 -> b^b^b branches, 
 ... and so on.
 
-So, if you don't want to wait so long, you can resize the gaming board (grid) or set smaller number of fruit type. (default: N=26, P=10)
+So, if you don't want to wait so long, you can resize the gaming board (grid) or set smaller number of fruit type. (default: N=26, P=9)
 
 
 ## Customized Agent Instructions
