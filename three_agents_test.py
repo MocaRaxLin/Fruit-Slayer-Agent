@@ -1,7 +1,7 @@
 import time
 from random_agent import RandomAgent
 from minimax_agent import MinimaxAgent
-from minimax_ab_agent import MinimaxAgentPruning
+from minimax_ab_agent import MinimaxPruningAgent
 
 def dfs(grid, r, c, N, p):
 	if r == -1 or c == -1 or r == N or c == N or grid[r][c] != p:
@@ -68,7 +68,7 @@ print()
 
 print("Minimax Agent: ")
 for i in range(1, 11):
-	if i == 6 or i == 7 or i == 9:
+	if i == 6 or i == 7 or i == 9: # too long to waits
 		continue;
 	s = time.time()
 	agent = MinimaxAgent("testcases/input"+str(i)+".txt")
@@ -85,7 +85,7 @@ print()
 print("Minimax with αβ pruning Agent: ")
 for i in range(1, 11):
 	s = time.time()
-	agent = MinimaxAgentPruning("testcases/input"+str(i)+".txt")
+	agent = MinimaxPruningAgent("testcases/input"+str(i)+".txt")
 	move = agent.predict_best_move(3)
 	agent.write_next_grid("testcases/output"+str(i)+"_minimax_ab.txt")
 	e = time.time() - s
@@ -95,5 +95,6 @@ for i in range(1, 11):
 	print("- Average time per node: "+str(e/agent.searched_node))
 	verify(i, "testcases/input"+str(i)+".txt", "testcases/output"+str(i)+"_minimax_ab.txt")
 print()
+
 
 

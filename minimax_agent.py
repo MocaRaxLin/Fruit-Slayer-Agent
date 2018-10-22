@@ -114,6 +114,19 @@ class MinimaxAgent(Agent):
 
 
 
+def eval_func(N:int, P:int, T:float) -> int:
+	if T < 100:
+		return 1
+	elif T < 200 or N > 10:
+		return 2
+	return 3
+
+if __name__ == '__main__':
+	agent = MinimaxAgent("input.txt")
+	d = eval_func(agent.N, agent.type, agent.time)
+	move = agent.predict_best_move(d)
+	agent.write_next_grid("output.txt")
+
 
 
 

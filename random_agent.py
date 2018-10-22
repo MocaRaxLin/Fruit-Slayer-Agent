@@ -20,3 +20,8 @@ class RandomAgent(Agent):
 		return pool[idx]
 
 
+if __name__ == '__main__':
+	agent = RandomAgent("input.txt")
+	move = agent.predict_best_move()
+	agent.move(agent.grid, move[0], move[1])
+	agent.write_grid("output.txt", move[0], move[1])

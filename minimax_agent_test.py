@@ -3,7 +3,7 @@ import time
 
 s = time.time()
 
-agent = MinimaxAgent("input5.txt")
+agent = MinimaxAgent("input4.txt")
 print("----- load_data test ------")
 agent.print_info()
 
@@ -18,7 +18,7 @@ agent.print_grid(agent.minimax_root.next_state.grid)
 # agent.print_minimax()
 
 print("----- write_grid test ------")
-agent.write_next_grid("test_output5_minimax.txt")
+agent.write_next_grid("test_output4_minimax.txt")
 print("see test_output.txt in folder!")
 print()
 

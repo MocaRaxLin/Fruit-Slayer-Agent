@@ -1,9 +1,9 @@
-from minimax_ab_agent import MinimaxAgentPruning
+from minimax_ab_agent import MinimaxPruningAgent
 import time
 
 s = time.time()
 
-agent = MinimaxAgentPruning("input9.txt")
+agent = MinimaxPruningAgent("input7.txt")
 print("----- load_data test ------")
 agent.print_info()
 
@@ -18,7 +18,7 @@ agent.print_grid(agent.minimax_root.next_state.grid)
 # agent.print_minimax()
 
 print("----- write_grid test ------")
-agent.write_next_grid("test_output9_minimax_ab.txt")
+agent.write_next_grid("test_output7_minimax_ab.txt")
 print("see test_output.txt in folder!")
 print()
 

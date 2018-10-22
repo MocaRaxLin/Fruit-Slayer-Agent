@@ -8,9 +8,9 @@ class AlphaBetaState(State):
 		self.alpha = alpha
 		self.beta = beta
 		
-class MinimaxAgentPruning(MinimaxAgent):
+class MinimaxPruningAgent(MinimaxAgent):
 	def __init__(self, file_name):
-		super(MinimaxAgentPruning, self).__init__(file_name)
+		super(MinimaxPruningAgent, self).__init__(file_name)
 
 	def dfs_check(self, grid:List[List[chr]], r:int, c:int, N:int, p:int, seen:List[List[chr]]) -> int:
 		if r == -1 or c == -1 or r == N or c == N or seen[r][c] or grid[r][c] != p:
@@ -69,7 +69,7 @@ class MinimaxAgentPruning(MinimaxAgent):
 
 		branches = self.get_branches(root.grid, root.find_max)
 		b_size = len(branches)
-		self.searched_node += b_size
+		
 		if b_size == 0:
 			root.best = root.points
 			return
@@ -101,7 +101,8 @@ class MinimaxAgentPruning(MinimaxAgent):
 
 			root.children.append(child)
 			if root.beta <= root.alpha:
-				return
+				break
+		self.searched_node += len(root.children)
 
 	def predict_best_move(self, lookahead:int) -> List[int]:
 
@@ -110,4 +111,21 @@ class MinimaxAgentPruning(MinimaxAgent):
 		self.minimax_root = AlphaBetaState(copyed_grid, [-1,-1], 0, True, lookahead, -float('inf'), float('inf'))
 		self.build_minimax_alpha_beta_pruning(self.minimax_root)
 		return self.minimax_root.next_move
+
+def eval_func(N:int, P:int, T:float) -> int:
+	if T < 50:
+		return 1
+	elif T < 150 or N > 18:
+		return 2
+	return 3
+
+if __name__ == '__main__':
+	agent = MinimaxPruningAgent("input.txt")
+	d = eval_func(agent.N, agent.type, agent.time)
+	move = agent.predict_best_move(d)
+	agent.write_next_grid("output.txt")
+
+
+
+
 		
